@@ -1,0 +1,99 @@
+# EasyReminder - 催账助手 📱💸
+
+> **让“借钱还款”不再尴尬。**
+
+EasyReminder 是一款专为解决“熟人借钱不好意思开口催”而设计的移动应用。它通过精致的界面、自动化的利息计算和专业化的催单模版，帮助你维护个人债权，同时保持社交礼仪。
+
+---
+
+## 🌟 项目愿景
+在社交关系中，直接催款往往伴随着尴尬和心理负担。EasyReminder 的核心目标是将这种尴尬的感性交流转变为透明、准确的理性数据。我们希望通过这款工具，让每一笔账单都清晰可见，让每一次提醒都体面大方。
+
+## 🚀 核心功能
+- **🔒 隐私保护**：内置安全锁定机制，保护你的个人借贷隐私。
+- **📊 动态账单管理**：支持录入借款人、本金及年化利率。系统根据日期自动动态计算当前待还总额。
+- **📝 分次还款记录**：详细追踪每一笔还款历史，自动更新剩余账项。
+- **🎨 智能催单引擎**：
+  - 提供多套内置提醒模版（客气、正式、紧急）。
+  - 支持变量自动替换（如 `{name}`, `{amount}`, `{date}`）。
+  - 支持模版长按拖拽排序。
+- **📲 原生触达**：一键调用系统原生短信和邮件接口，直接跳转至发送界面。
+- **✨ 极致审美**：全站采用 **Dark Glassmorphism（深色玻璃拟态）** 设计风格，提供沉浸式的操作体验。
+
+---
+
+## 🛠️ 技术架构
+- **前端**: Vue 3 + Vite + Pinia
+- **样式**: Vanilla CSS (Fluid Layout + Glassmorphism)
+- **移动容器**: Capacitor (支持跨平台打包)
+- **图标**: Lucide Vue Next
+
+---
+
+## 🏃 如何启动
+
+### 1. 安装依赖
+```bash
+npm install
+```
+
+### 2. 本地运行 (开发模式)
+```bash
+npm run dev
+```
+
+---
+
+## 🤖 如何构建 Android App
+
+本项目已集成 Capacitor，可以直接构建并在 Android 设备上运行。
+
+### 1. 构建 Web 资源并同步
+首先同步前端资源到 Android 工程：
+```bash
+sh scripts/build-android.sh
+```
+
+### 2. 命令行快速打包 (推荐)
+无需打开 Android Studio，直接在终端执行以下命令生成 APK 安装包：
+```bash
+cd android
+./gradlew assembleDebug
+```
+**APK 文件位置**: `android/app/build/outputs/apk/debug/app-debug.apk`
+
+### 3. 使用 Android Studio 打包 (可选)
+如果你需要通过图形界面调试或使用原生功能：
+1. 运行 `npx cap open android` 打开工程。
+2. 在 Android Studio 中点击 **Build** -> **Build Bundle(s) / APK(s)** -> **Build APK(s)**。
+
+---
+
+## 🍎 如何构建 iOS App
+
+你需要一台 macOS 电脑来构建 iOS 应用 (IPA)。
+
+### 1. 构建 Web 资源并同步
+每次修改 Vue 代码后，都必须执行此同步命令：
+```bash
+npm run build && npx cap sync
+```
+
+### 2. 配置签名 (首次必须)
+iOS 应用必须经过签名才能安装到真机上。
+1. 运行 `npx cap open ios` 自动打开 Xcode。
+2. 在左侧导航栏点击最顶部的 📱 **App** (蓝色图标)。
+3. 在右侧点击 **Signing & Capabilities** 选项卡。
+4. 在 **Team** 下拉菜单中，选择你的 **Apple ID** (如果没有，点击 "Add an Account..." 免费登录即可)。
+5. 确保 Bundle Identifier 下方没有红色的错误提示。
+
+### 3. 连接真机运行
+1. 用数据线将 iPhone 连接到电脑。
+2. 在 Xcode 顶部工具栏的设备列表中选择你的 iPhone。
+3. 点击左上角的 **Play 按钮 (▶)**。
+4. 应用将自动安装并在手机上启动。
+
+---
+
+## 📄 用户信息
+*   **默认安全锁密码**: 请查看 `dev-plan.md` 中的说明。# easy-reminder
