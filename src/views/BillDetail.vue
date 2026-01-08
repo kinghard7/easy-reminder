@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useBillStore } from '../stores/billStore'
 import { ChevronLeft, Send, History, DollarSign, Calendar, Info, ChevronDown, ChevronUp } from 'lucide-vue-next'
+import DatePickerModal from '../components/modals/DatePickerModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -22,16 +23,18 @@ const formatCurrency = (val) => {
 }
 
 const showPaymentModal = ref(false)
+const showDatePicker = ref(false)
 const paymentAmount = ref(0)
 const isError = ref(false)
 const isNoteExpanded = ref(false)
 
-const updateDate = (e) => {
-  const newDate = e.target.value
-  if (!newDate) return
+const handleDateUpdate = (newDate) => {
   bill.value.date = newDate
   billStore.save()
+  showDatePicker.value = false
 }
+
+
 
 const updateNote = (e) => {
   bill.value.note = e.target.value
@@ -97,13 +100,8 @@ const addPayment = () => {
             <Calendar :size="16" class="text-muted" />
             <p class="info-label">起借日期</p>
           </div>
-          <div class="editable-info">
-            <input 
-              type="date" 
-              :value="bill.date" 
-              @input="updateDate"
-              class="info-input"
-            />
+          <div class="editable-info" @click="showDatePicker = true">
+            <div class="info-input clickable-text">{{ bill.date }}</div>
           </div>
         </div>
         <div class="info-item glass">
@@ -197,7 +195,15 @@ const addPayment = () => {
             <button @click="addPayment" class="btn-confirm">确认还款</button>
           </div>
         </div>
+
       </div>
+
+      <DatePickerModal 
+        :show="showDatePicker"
+        :model-value="bill.date"
+        @update:modelValue="handleDateUpdate"
+        @close="showDatePicker = false"
+      />
     </div>
     <div v-else class="container flex-center" style="height: 100vh;">
       <p class="text-muted">加载中...</p>
@@ -605,4 +611,9 @@ const addPayment = () => {
 .btn-confirm:active {
   transform: translateY(2px);
 }
+
+.clickable-text {
+  cursor: pointer;
+}
+
 </style>

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useBillStore } from '../stores/billStore'
 import { useToast } from '../composables/useToast'
 import { ChevronLeft, Save } from 'lucide-vue-next'
+import DatePickerModal from '../components/modals/DatePickerModal.vue'
 
 const router = useRouter()
 const billStore = useBillStore()
@@ -29,6 +30,12 @@ const handleSave = () => {
   billStore.addBill({ ...form.value })
   showToast('账单已成功录入')
   router.push('/home')
+}
+
+const showDatePicker = ref(false)
+const handleDateUpdate = (newDate) => {
+  form.value.date = newDate
+  showDatePicker.value = false
 }
 </script>
 
@@ -70,13 +77,12 @@ const handleSave = () => {
 
       <div class="input-group">
         <label class="input-label">借款日期</label>
-        <input 
-          v-model="form.date" 
-          type="date" 
-          class="input-field"
-          required
-          @focus="scrollIntoView"
-        />
+        <div 
+          class="input-field clickable-select" 
+          @click="showDatePicker = true"
+        >
+          {{ form.date }}
+        </div>
       </div>
 
       <div class="input-group">
@@ -107,6 +113,14 @@ const handleSave = () => {
       </button>
     </form>
   </div>
+
+
+  <DatePickerModal 
+    :show="showDatePicker"
+    :model-value="form.date"
+    @update:modelValue="handleDateUpdate"
+    @close="showDatePicker = false"
+  />
 </template>
 
 <style scoped>
@@ -166,5 +180,11 @@ const handleSave = () => {
 
 textarea.input-field {
   resize: none;
+}
+
+.clickable-select {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 </style>
