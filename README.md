@@ -85,7 +85,7 @@ cd android
 ### 1. 构建 Web 资源并同步
 每次修改 Vue 代码后，都必须执行此同步命令：
 ```bash
-npm run build && npx cap sync
+sh scripts/build-ios.sh
 ```
 
 ### 2. 配置签名 (首次必须)
