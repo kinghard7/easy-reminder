@@ -38,4 +38,21 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Global Error:', err, info)
+  const errorDiv = document.createElement('div')
+  errorDiv.style.position = 'fixed'
+  errorDiv.style.top = '0'
+  errorDiv.style.left = '0'
+  errorDiv.style.width = '100%'
+  errorDiv.style.backgroundColor = '#ef4444'
+  errorDiv.style.color = 'white'
+  errorDiv.style.padding = '20px'
+  errorDiv.style.zIndex = '999999'
+  errorDiv.style.whiteSpace = 'pre-wrap'
+  errorDiv.innerText = `App Error: ${err.message}\nInfo: ${info}\nStack: ${err.stack}`
+  document.body.appendChild(errorDiv)
+}
+
 app.mount('#app')

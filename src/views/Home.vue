@@ -30,8 +30,14 @@ const formatCurrency = (val) => {
   return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(val)
 }
 
-const activeBills = computed(() => billStore.bills.filter(b => billStore.calculateDebt(b) > 0.01))
-const settledBills = computed(() => billStore.bills.filter(b => billStore.calculateDebt(b) <= 0.01))
+const activeBills = computed(() => {
+  if (!Array.isArray(billStore.bills)) return []
+  return billStore.bills.filter(b => b && billStore.calculateDebt(b) > 0.01)
+})
+const settledBills = computed(() => {
+  if (!Array.isArray(billStore.bills)) return []
+  return billStore.bills.filter(b => b && billStore.calculateDebt(b) <= 0.01)
+})
 
 const displayBills = computed(() => currentTab.value === 'active' ? activeBills.value : settledBills.value)
 

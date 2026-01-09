@@ -17,7 +17,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'close'])
 
-const view = ref('date') // 'date' or 'year'
+const view = ref('date') // 'date', 'year', or 'month'
 const internalDate = ref(new Date()) // The date currently being viewed/selected
 const today = new Date()
 
@@ -34,8 +34,10 @@ watch(() => props.show, (newVal) => {
 }, { immediate: true })
 
 const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 
 const selectedYear = computed(() => internalDate.value.getFullYear())
+const selectedMonth = computed(() => internalDate.value.getMonth())
 const currentMonthLabel = computed(() => format(internalDate.value, 'yyyy年M月', { locale: zhCN }))
 const formattedDateDisplay = computed(() => format(internalDate.value, 'M月d日 EEEE', { locale: zhCN }))
 
@@ -66,6 +68,11 @@ const selectDate = (day) => {
 
 const selectYear = (year) => {
   internalDate.value = setYear(internalDate.value, year)
+  view.value = 'date'
+}
+
+const selectMonth = (monthIndex) => {
+  internalDate.value = setMonth(internalDate.value, monthIndex)
   view.value = 'date'
 }
 
@@ -107,7 +114,12 @@ const confirm = () => {
       <div v-if="view === 'date'" class="calendar-view">
         <div class="month-nav">
           <button @click="prevMonth" class="nav-btn"><ChevronLeft :size="20" /></button>
-          <span class="month-label">{{ currentMonthLabel }}</span>
+          <span 
+            class="month-label clickable-label" 
+            @click="view = 'month'"
+          >
+            {{ currentMonthLabel }}
+          </span>
           <button @click="nextMonth" class="nav-btn"><ChevronRight :size="20" /></button>
         </div>
 
@@ -125,6 +137,20 @@ const confirm = () => {
                }"
                @click="selectDate(day)">
             {{ day }}
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Month View -->
+      <div v-else-if="view === 'month'" class="month-view">
+        <div class="months-grid">
+          <div v-for="(m, index) in months" :key="m"
+               class="month-cell"
+               :class="{ 'selected': index === selectedMonth }"
+               @click="selectMonth(index)">
+            {{ m }}
           </div>
         </div>
       </div>
@@ -161,14 +187,16 @@ const confirm = () => {
   backdrop-filter: blur(5px);
   z-index: 1000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 1.5rem;
+  padding-top: 15vh;
 }
 
 .modal-content {
   width: 100%;
   max-width: 340px;
+  max-height: 75vh;
   background: rgba(15, 23, 42, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0;
@@ -180,17 +208,17 @@ const confirm = () => {
 /* Header */
 .picker-header {
   background: linear-gradient(135deg, var(--primary), var(--accent));
-  padding: 1.5rem;
+  padding: 1rem;
   color: white;
 }
 
 .year-selector {
-  font-size: 1rem;
+  font-size: 0.875rem;
   opacity: 0.7;
   font-weight: 500;
   cursor: pointer;
   transition: opacity 0.2s;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
 }
 
 .year-selector.active, .year-selector:hover {
@@ -198,7 +226,7 @@ const confirm = () => {
 }
 
 .date-display {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
   transition: opacity 0.2s;
@@ -211,19 +239,30 @@ const confirm = () => {
 
 /* Calendar View */
 .calendar-view {
-  padding: 1rem 1.5rem 0;
+  padding: 0.75rem 1rem 0;
 }
 
 .month-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .month-label {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
+}
+
+.clickable-label {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
+.clickable-label:hover {
+  background: rgba(255,255,255,0.1);
 }
 
 .nav-btn {
@@ -248,26 +287,26 @@ const confirm = () => {
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
   margin-bottom: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  row-gap: 0.5rem;
-  margin-bottom: 1rem;
-  min-height: 240px; /* Keep height consistent */
+  row-gap: 0.375rem;
+  margin-bottom: 0.75rem;
+  min-height: 200px; /* Keep height consistent */
 }
 
 .day-cell {
-  height: 36px;
-  width: 36px;
+  height: 32px;
+  width: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   cursor: pointer;
   margin: 0 auto;
   transition: all 0.2s;
@@ -292,26 +331,65 @@ const confirm = () => {
   color: white;
 }
 
+.day-cell.selected.today {
+  color: white;
+}
+
+/* Month View */
+.month-view {
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.month-cell {
+  padding: 0.75rem 0;
+  text-align: center;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.month-cell:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.month-cell.selected {
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+
 /* Year View */
 .year-view {
-  height: 320px;
+  height: 260px;
   overflow-y: auto;
-  padding: 1rem 0;
+  padding: 0.75rem 0;
 }
 
 .years-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  padding: 0 1.5rem;
+  gap: 0.75rem;
+  padding: 0 1rem;
 }
 
 .year-cell {
-  padding: 0.75rem 0;
+  padding: 0.625rem 0;
   text-align: center;
   border-radius: 1rem;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all 0.2s;
 }
 
@@ -328,7 +406,7 @@ const confirm = () => {
 /* Actions */
 .modal-actions {
   display: flex;
-  padding: 1rem 1.5rem 1.5rem;
+  padding: 0.75rem 1rem 1rem;
   gap: 1rem;
   justify-content: flex-end;
 }

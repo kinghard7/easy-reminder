@@ -68,6 +68,7 @@ const handleDateUpdate = (newDate) => {
         <input 
           v-model.number="form.amount" 
           type="number" 
+          step="0.01"
           placeholder="0.00" 
           class="input-field"
           required
@@ -90,6 +91,7 @@ const handleDateUpdate = (newDate) => {
         <input 
           v-model.number="form.interest" 
           type="number" 
+          step="0.01"
           placeholder="0" 
           class="input-field"
           @focus="scrollIntoView"
@@ -112,15 +114,13 @@ const handleDateUpdate = (newDate) => {
         <Save :size="20" /> 保存账单
       </button>
     </form>
+    <DatePickerModal 
+      :show="showDatePicker"
+      :model-value="form.date"
+      @update:modelValue="handleDateUpdate"
+      @close="showDatePicker = false"
+    />
   </div>
-
-
-  <DatePickerModal 
-    :show="showDatePicker"
-    :model-value="form.date"
-    @update:modelValue="handleDateUpdate"
-    @close="showDatePicker = false"
-  />
 </template>
 
 <style scoped>

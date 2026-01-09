@@ -31,6 +31,18 @@ EasyReminder 是一款专为解决“熟人借钱不好意思开口催”而设�
 
 ---
 
+## 📸 功能展示
+
+<div align="center">
+  <img src="image/651767972896_.pic.jpg" width="200" alt="进入主页面" />
+  <img src="image/621767972893_.pic.jpg" width="200" alt="账单详情" />
+  <img src="image/631767972894_.pic.jpg" width="200" alt="账单页面" />
+  <img src="image/641767972895_.pic.jpg" width="200" alt="日期空间账单" />
+  <img src="image/611767972893_.pic.jpg" width="200" alt="催单模版" />
+</div>
+
+---
+
 ## 🛠️ 技术架构
 - **前端**: Vue 3 + Vite + Pinia
 - **样式**: Vanilla CSS (Fluid Layout + Glassmorphism)

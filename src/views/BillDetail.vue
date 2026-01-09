@@ -178,7 +178,8 @@ const addPayment = () => {
               <span class="currency-symbol">¥</span>
               <input 
                 v-model.number="paymentAmount" 
-                type="number" 
+                type="number"
+                step="0.01" 
                 class="amount-input" 
                 placeholder="0.00" 
                 autoFocus
